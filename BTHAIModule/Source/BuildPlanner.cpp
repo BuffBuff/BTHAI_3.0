@@ -16,6 +16,7 @@ BuildPlanner::BuildPlanner()
 	BuildOrderFileReader br = BuildOrderFileReader();
 	buildOrder = br.readBuildOrder();
 	lastCallFrame = Broodwar->getFrameCount();
+	hasLockedForResourceDepot = false;
 }
 
 BuildPlanner::~BuildPlanner()
@@ -84,11 +85,6 @@ void BuildPlanner::computeActions()
 		}
 	}
 
-	//Check if we can build next building in the buildorder
-	if ((int)buildOrder.size() > 0)
-	{
-		executeOrder(buildOrder.at(0));
-	}
 
 	//Check if we need more supply buildings
 	if (isTerran() || isProtoss())
@@ -99,10 +95,17 @@ void BuildPlanner::computeActions()
 		}
 	}
 
+	//Check if we can build next building in the buildorder
+	if ((int)buildOrder.size() > 0)
+	{
+		executeOrder(buildOrder.at(0));
+	}
+
 	if (!hasResourcesLeft() || ResourceManager::getInstance()->hasResources(2000, 0))
 	{
 		expand(Broodwar->self()->getRace().getCenter());
 	}
+
 }
 
 bool BuildPlanner::hasResourcesLeft()
@@ -119,7 +122,9 @@ bool BuildPlanner::hasResourcesLeft()
 		}
 	}
 
-	if (totalMineralsLeft <= 10000)
+	//Broodwar->printf("Minerals left: %d", totalMineralsLeft);
+
+	if (totalMineralsLeft <= 10000) //TODO: Diminishing limits for expanding e.g. 10k - eXpands * Y
 	{
 		return false;
 	}
@@ -352,7 +357,7 @@ bool BuildPlanner::executeOrder(UnitType type)
 		{
 			if (agents.at(i)->getUnitType().isResourceDepot() && agents.at(i)->getUnit()->isBeingConstructed())
 			{
-				return false;
+				return false; // TODO: Check if necessary
 			}
 		}
 	}
@@ -383,23 +388,32 @@ bool BuildPlanner::executeOrder(UnitType type)
 		if (builder.first.getID() != UnitTypes::Zerg_Drone)
 		{
 			//Needs to be morphed
-			if (executeMorph(builder.first, type))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return executeMorph(builder.first, type);
+		}
+	}
+
+	if (type.isResourceDepot())
+	{
+		if (hasLockedForResourceDepot)
+		{
+			ResourceManager::getInstance()->unlockResources(type);
+			hasLockedForResourceDepot = false;
 		}
 	}
 
 	//Check if we have resources
 	if (!ResourceManager::getInstance()->hasResources(type))
 	{
+		if (type.isResourceDepot())
+		{
+			ResourceManager::getInstance()->lockResources(type);
+			hasLockedForResourceDepot = true;
+		}
 		return false;
 	}
 
+
+	// TODO: Check if we can improve finding the best worker
 	vector<BaseAgent*> agents = AgentManager::getInstance()->getAgents();
 	for (int i = 0; i < (int)agents.size(); i++)
 	{
@@ -418,6 +432,15 @@ bool BuildPlanner::executeOrder(UnitType type)
 					//Unable to find a buildspot. Dont bother checking for all
 					//other workers
 					handleNoBuildspotFound(type);
+
+					Broodwar->printf("No build spot found for %s", type.getName().c_str());
+
+					if (type.isResourceDepot())
+					{
+						ResourceManager::getInstance()->lockResources(type);
+						hasLockedForResourceDepot = true;
+					}
+
 					return false;
 				}
 			}
@@ -522,8 +545,7 @@ void BuildPlanner::handleNoBuildspotFound(UnitType toBuild)
 	{
 		remove(toBuild);
 	}
-
-	if (!removeOrder)
+	else
 	{
 		if (isProtoss() && !supplyBeingBuilt())
 		{
@@ -647,7 +669,7 @@ int BuildPlanner::noInProduction(UnitType type)
 				if ((*i)->getType().getID() == UnitTypes::Zerg_Egg.getID())
 				{
 					if ((*i)->getBuildType().getID() == type.getID())
-				{
+					{
 						no++;
 						if (type.isTwoUnitsInOneEgg()) no++;
 					}

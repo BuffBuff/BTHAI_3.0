@@ -267,10 +267,7 @@ TilePosition CoverMap::findBuildSpot(UnitType toBuild)
 				}
 			}
 		}
-	}
 
-	if (BaseAgent::isOfType(toBuild, UnitTypes::Protoss_Pylon))
-	{
 		if (AgentManager::getInstance()->countNoUnits(UnitTypes::Protoss_Pylon) > 0)
 		{
 			TilePosition cp = Commander::getInstance()->findChokePoint();
@@ -752,7 +749,7 @@ TilePosition CoverMap::findExpansionSite()
 			if (agent->isAlive() && agent->getUnitType().isResourceDepot())
 			{
 				double dist = pos.getDistance(agent->getUnit()->getTilePosition());
-				if (dist <= 12)
+				if (dist <= 20)
 				{
 					noBases++;
 				}

@@ -223,6 +223,12 @@ bool StructureAgent::canBuildUnit(UnitType type)
 	}
 
 	//All clear. Build the unit.
+
+	if (BuildPlanner::getInstance()->nextIsOfType(UnitTypes::Zerg_Hatchery))
+	{
+		Broodwar->printf("Build %s despite hatchery in build order", type.getName().c_str());
+	}
+
 	return true;
 }
 

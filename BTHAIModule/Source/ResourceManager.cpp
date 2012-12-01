@@ -47,7 +47,7 @@ bool ResourceManager::needWorker()
 	int workersPerBase = 18;
 	if (BuildPlanner::isZerg())
 	{
-		workersPerBase = 10;
+		workersPerBase = 11;
 	}
 
 	int noBases = AgentManager::getInstance()->countNoBases();
@@ -74,7 +74,7 @@ bool ResourceManager::hasResources(UnitType type)
 	int nMinerals = type.mineralPrice();
 	int nGas = type.gasPrice();
 
-	if (type.isBuilding())
+	/*if (type.isBuilding())
 	{
 		if (hasProductionBuilding())
 		{
@@ -84,7 +84,7 @@ bool ResourceManager::hasResources(UnitType type)
 				nGas += 100;
 			}
 		}
-	}
+	}*/
 
 	return hasResources(nMinerals, nGas);
 }

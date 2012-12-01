@@ -421,7 +421,8 @@ bool AgentManager::unitsInArea(TilePosition pos, int tileWidth, int tileHeight, 
 			if (agents.at(i)->getUnit()->getID() != unitID)
 			{
 				TilePosition aPos = agents.at(i)->getUnit()->getTilePosition();
-				if (aPos.x() >= pos.x() && aPos.x() <= pos.x() + tileWidth && aPos.y() >= pos.y() && aPos.y() <= pos.y() + tileWidth)
+				UnitType type = agents.at(i)->getUnit()->getType();
+				if (!(aPos.x() > pos.x() + tileWidth || aPos.x() + type.tileWidth() < pos.x() || aPos.y() > pos.y() + tileWidth || aPos.y() + type.tileHeight() < pos.y()))
 				{
 					return true;
 				}
