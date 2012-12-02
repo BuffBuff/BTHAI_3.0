@@ -17,8 +17,7 @@ Pathfinder::Pathfinder()
 
 Pathfinder::~Pathfinder()
 {
-	running = false;
-	while (!end);
+	stop();
 
 	for (int i = 0; i < (int)pathObj.size(); i++)
 	{	
@@ -108,6 +107,8 @@ vector<TilePosition> Pathfinder::getPath(TilePosition start, TilePosition end)
 void Pathfinder::stop()
 {
 	running = false;
+
+	WaitForSingleObject(GetThreadHandle(), INFINITE);
 }
 
 bool Pathfinder::isRunning()
