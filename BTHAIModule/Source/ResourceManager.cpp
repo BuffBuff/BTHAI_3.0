@@ -52,19 +52,20 @@ bool ResourceManager::needWorker()
 
 	int noBases = AgentManager::getInstance()->countNoBases();
 	int noRefinery = AgentManager::getInstance()->countNoUnits(Broodwar->self()->getRace().getRefinery());
-	int idealNoWorkers = noBases * workersPerBase + noRefinery * 2;
-	if (idealNoWorkers > 60) idealNoWorkers = 60;
+	int idealNoWorkers = (noBases + 1) / 2 * workersPerBase + noRefinery * 2;
+	if (idealNoWorkers > 30) idealNoWorkers = 30;
 
 	int noWorkers = AgentManager::getInstance()->getNoWorkers();
 	if (noWorkers < idealNoWorkers)
 	{
-		//Check if we have enough resources
-		int nMinerals = Broodwar->self()->getRace().getWorker().mineralPrice();
-		if (hasProductionBuilding())
-		{
-			nMinerals += 150;
-		}
-		return hasResources(nMinerals, 0, false);
+		////Check if we have enough resources
+		//int nMinerals = Broodwar->self()->getRace().getWorker().mineralPrice();
+		//if (hasProductionBuilding())
+		//{
+		//	nMinerals += 150;
+		//}
+		//return hasResources(nMinerals, 0, false);
+		return hasResources(Broodwar->self()->getRace().getWorker());
 	}
 	return false;
 }

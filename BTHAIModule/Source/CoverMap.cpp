@@ -612,7 +612,7 @@ TilePosition CoverMap::findRefineryBuildSpot(UnitType toBuild, TilePosition star
 		BaseAgent* base = AgentManager::getInstance()->getClosestBase(buildSpot);
 		if (base == NULL)
 		{
-			Broodwar->printf("No base found");
+			Broodwar->printf("No base found while placing refinery");
 			return TilePosition(-1,-1);
 		}
 		else
@@ -620,7 +620,7 @@ TilePosition CoverMap::findRefineryBuildSpot(UnitType toBuild, TilePosition star
 			double dist = buildSpot.getDistance(base->getUnit()->getTilePosition());
 			if (dist >= 13) 
 			{
-				Broodwar->printf("Base too far away %d", (int)dist);
+				Broodwar->printf("Gas too far away from base (%d)", (int)dist);
 				return TilePosition(-1,-1);
 			}
 		}

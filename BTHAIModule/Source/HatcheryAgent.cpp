@@ -68,14 +68,6 @@ void HatcheryAgent::computeActions()
 			return;
 		}
 	}
-	//Build units
-	if (checkBuildUnit(UnitTypes::Zerg_Queen)) return;
-	if (checkBuildUnit(UnitTypes::Zerg_Mutalisk)) return;
-	if (checkBuildUnit(UnitTypes::Zerg_Hydralisk)) return;
-	if (checkBuildUnit(UnitTypes::Zerg_Zergling)) return;
-	if (checkBuildUnit(UnitTypes::Zerg_Defiler)) return;
-	if (checkBuildUnit(UnitTypes::Zerg_Ultralisk)) return;
-	if (checkBuildUnit(UnitTypes::Zerg_Scourge)) return;
 
 	//Create workers
 	if (ResourceManager::getInstance()->needWorker())
@@ -86,6 +78,15 @@ void HatcheryAgent::computeActions()
 			unit->train(worker);
 		}
 	}
+
+	//Build units
+	if (checkBuildUnit(UnitTypes::Zerg_Queen)) return;
+	if (checkBuildUnit(UnitTypes::Zerg_Mutalisk)) return;
+	if (checkBuildUnit(UnitTypes::Zerg_Hydralisk)) return;
+	if (checkBuildUnit(UnitTypes::Zerg_Zergling)) return;
+	if (checkBuildUnit(UnitTypes::Zerg_Defiler)) return;
+	if (checkBuildUnit(UnitTypes::Zerg_Ultralisk)) return;
+	if (checkBuildUnit(UnitTypes::Zerg_Scourge)) return;
 
 	//Check for base upgrades
 	if (isOfType(UnitTypes::Zerg_Hatchery))
