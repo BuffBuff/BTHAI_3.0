@@ -42,8 +42,6 @@ protected:
 
 	int lastCallFrame;
 
-	bool hasLockedForResourceDepot;
-
 public:
 	/** Destructor. */
 	~BuildPlanner();

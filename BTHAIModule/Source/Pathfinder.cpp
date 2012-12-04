@@ -68,11 +68,12 @@ void Pathfinder::requestPath(TilePosition start, TilePosition end)
 		pathObj.push_back(obj);
 	}
 
-	if ((int)pathObj.size() > 20)
+	const static unsigned long CACHE_SIZE = 50;
+	if ((int)pathObj.size() > CACHE_SIZE)
 	{
 		lock = true;
 
-		while (pathObj.size() > 20)
+		while (pathObj.size() > CACHE_SIZE)
 		{
 			pathObj.erase(pathObj.begin());
 		}

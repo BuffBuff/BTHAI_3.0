@@ -52,7 +52,7 @@ bool ResourceManager::needWorker()
 
 	int noBases = AgentManager::getInstance()->countNoBases();
 	int noRefinery = AgentManager::getInstance()->countNoUnits(Broodwar->self()->getRace().getRefinery());
-	int idealNoWorkers = noBases * workersPerBase + noRefinery * 3;
+	int idealNoWorkers = noBases * workersPerBase + noRefinery * 2;
 	if (idealNoWorkers > 60) idealNoWorkers = 60;
 
 	int noWorkers = AgentManager::getInstance()->getNoWorkers();
@@ -64,7 +64,7 @@ bool ResourceManager::needWorker()
 		{
 			nMinerals += 150;
 		}
-		return hasResources(nMinerals, 0);
+		return hasResources(nMinerals, 0, false);
 	}
 	return false;
 }
@@ -86,7 +86,7 @@ bool ResourceManager::hasResources(UnitType type)
 		}
 	}*/
 
-	return hasResources(nMinerals, nGas);
+	return hasResources(nMinerals, nGas, type.isResourceDepot() || type.isWorker());
 }
 
 bool ResourceManager::hasResources(UpgradeType type)
@@ -94,7 +94,7 @@ bool ResourceManager::hasResources(UpgradeType type)
 	int nMinerals = type.mineralPrice();
 	int nGas = type.gasPrice();
 
-	return hasResources(nMinerals, nGas);
+	return hasResources(nMinerals, nGas, false);
 }
 
 bool ResourceManager::hasResources(TechType type)
@@ -102,11 +102,20 @@ bool ResourceManager::hasResources(TechType type)
 	int nMinerals = type.mineralPrice();
 	int nGas = type.gasPrice();
 
-	return hasResources(nMinerals, nGas);
+	return hasResources(nMinerals, nGas, false);
 }
 
-bool ResourceManager::hasResources(int neededMinerals, int neededGas)
+bool ResourceManager::hasResources(int neededMinerals, int neededGas, bool isExpand)
 {
+	if (!isExpand)
+	{
+		UnitType baseType = Broodwar->self()->getRace().getCenter();
+		if (BuildPlanner::getInstance()->nextIsOfType(baseType))
+		{
+			neededMinerals += baseType.mineralPrice();
+		}
+	}
+
 	if (Broodwar->self()->minerals() - calcLockedMinerals() >= neededMinerals)
 	{
 		if (Broodwar->self()->gas() - calcLockedGas() >= neededGas)

@@ -403,8 +403,8 @@ bool WorkerAgent::assignToFinishBuild(Unit* building)
 bool WorkerAgent::canBuild(UnitType type)
 {
 	//Make sure we have some spare resources so we dont drain
-	//required minerals for our units.
-	if (Broodwar->self()->minerals() < type.mineralPrice() + 100)
+	//required minerals for our units. NOT
+	if (Broodwar->self()->minerals() < type.mineralPrice())
 	{
 		return false;
 	}

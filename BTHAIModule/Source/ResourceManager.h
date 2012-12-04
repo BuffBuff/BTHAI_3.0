@@ -61,7 +61,7 @@ public:
 	bool hasResources(TechType type);
 
 	/** Checks if we have enough resources free. */
-	bool hasResources(int neededMinerals, int neededGas);
+	bool hasResources(int neededMinerals, int neededGas, bool isExpand);
 
 	/** Locks resources for use. */
 	void lockResources(UnitType type);

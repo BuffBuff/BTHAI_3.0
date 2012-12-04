@@ -16,7 +16,6 @@ BuildPlanner::BuildPlanner()
 	BuildOrderFileReader br = BuildOrderFileReader();
 	buildOrder = br.readBuildOrder();
 	lastCallFrame = Broodwar->getFrameCount();
-	hasLockedForResourceDepot = false;
 }
 
 BuildPlanner::~BuildPlanner()
@@ -101,7 +100,7 @@ void BuildPlanner::computeActions()
 		executeOrder(buildOrder.at(0));
 	}
 
-	if (!hasResourcesLeft() || ResourceManager::getInstance()->hasResources(2000, 0))
+	if (!hasResourcesLeft() || ResourceManager::getInstance()->hasResources(2000, 0, false))
 	{
 		expand(Broodwar->self()->getRace().getCenter());
 	}
@@ -124,7 +123,7 @@ bool BuildPlanner::hasResourcesLeft()
 
 	//Broodwar->printf("Minerals left: %d", totalMineralsLeft);
 
-	if (totalMineralsLeft <= 10000) //TODO: Diminishing limits for expanding e.g. 10k - eXpands * Y
+	if (totalMineralsLeft <= 8000) //TODO: Diminishing limits for expanding e.g. 10k - eXpands * Y
 	{
 		return false;
 	}
@@ -345,33 +344,35 @@ bool BuildPlanner::executeOrder(UnitType type)
 		return false;
 	}
 
-	//Hold if we are to build a new base
-	if ((int)buildQueue.size() > 0)
-	{
-		if (buildQueue.at(0).toBuild.isResourceDepot())
-		{
-			return false;
-		}
-		vector<BaseAgent*> agents = AgentManager::getInstance()->getAgents();
-		for (int i = 0; i < (int)agents.size(); i++)
-		{
-			if (agents.at(i)->getUnitType().isResourceDepot() && agents.at(i)->getUnit()->isBeingConstructed())
-			{
-				return false; // TODO: Check if necessary
-			}
-		}
-	}
+	////Hold if we are to build a new base
+	//if ((int)buildQueue.size() > 0)
+	//{
+	//	if (buildQueue.at(0).toBuild.isResourceDepot())
+	//	{
+	//		return false;
+	//	}
+	//	vector<BaseAgent*> agents = AgentManager::getInstance()->getAgents();
+	//	for (int i = 0; i < (int)agents.size(); i++)
+	//	{
+	//		if (agents.at(i)->getUnitType().isResourceDepot() && agents.at(i)->getUnit()->isBeingConstructed())
+	//		{
+	//			return false; // TODO: Check if necessary
+	//		}
+	//	}
+	//}
 
 	if (type.isResourceDepot())
 	{
 		TilePosition pos = CoverMap::getInstance()->findExpansionSite();
 		if (pos.x() == -1)
 		{
+			Broodwar->printf("Removing expand as no expansion site could be found");
 			//No expansion site found.
 			if ((int)buildOrder.size() > 0) buildOrder.erase(buildOrder.begin());
 			return true;
 		}
 	}
+
 	if (type.isRefinery())
 	{
 		TilePosition rSpot = CoverMap::getInstance()->searchRefinerySpot();
@@ -382,6 +383,7 @@ bool BuildPlanner::executeOrder(UnitType type)
 			return true;
 		}
 	}
+
 	if (isZerg())
 	{
 		pair<UnitType, int> builder = type.whatBuilds();
@@ -392,23 +394,9 @@ bool BuildPlanner::executeOrder(UnitType type)
 		}
 	}
 
-	if (type.isResourceDepot())
-	{
-		if (hasLockedForResourceDepot)
-		{
-			ResourceManager::getInstance()->unlockResources(type);
-			hasLockedForResourceDepot = false;
-		}
-	}
-
 	//Check if we have resources
 	if (!ResourceManager::getInstance()->hasResources(type))
 	{
-		if (type.isResourceDepot())
-		{
-			ResourceManager::getInstance()->lockResources(type);
-			hasLockedForResourceDepot = true;
-		}
 		return false;
 	}
 
@@ -434,12 +422,6 @@ bool BuildPlanner::executeOrder(UnitType type)
 					handleNoBuildspotFound(type);
 
 					Broodwar->printf("No build spot found for %s", type.getName().c_str());
-
-					if (type.isResourceDepot())
-					{
-						ResourceManager::getInstance()->lockResources(type);
-						hasLockedForResourceDepot = true;
-					}
 
 					return false;
 				}
