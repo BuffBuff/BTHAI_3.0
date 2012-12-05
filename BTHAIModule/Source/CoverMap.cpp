@@ -367,7 +367,8 @@ TilePosition CoverMap::findSpotAtSide(UnitType toBuild, TilePosition start, Tile
 		int cX = cPos.x() + dX;
 		int cY = cPos.y() + dY;
 		cPos = TilePosition(cX, cY);
-		if (cPos.x() == end.x() && cPos.y() == end.y()) done = true;
+		if (cPos.x() == end.x() && cPos.y() == end.y()) 
+			done = true;
 	}
 
 	return TilePosition(-1, -1);
@@ -441,7 +442,7 @@ TilePosition CoverMap::findBuildSpot(UnitType toBuild, TilePosition start)
 		}
 
 		cDiff++;
-		if (cDiff > range) found = true;
+		if (cDiff > range) break;
 	}
 	
 	return spot;
