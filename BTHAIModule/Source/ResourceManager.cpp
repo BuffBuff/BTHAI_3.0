@@ -52,7 +52,7 @@ bool ResourceManager::needWorker()
 
 	int noBases = AgentManager::getInstance()->countNoBases();
 	int noRefinery = AgentManager::getInstance()->countNoUnits(Broodwar->self()->getRace().getRefinery());
-	int idealNoWorkers = (noBases + 1) / 2 * workersPerBase + noRefinery * 2;
+	int idealNoWorkers = (noBases > 1 ? noBases - 1 : noBases) * workersPerBase + noRefinery * 2;
 	if (idealNoWorkers > 30) idealNoWorkers = 30;
 
 	int noWorkers = AgentManager::getInstance()->getNoWorkers();

@@ -734,6 +734,25 @@ TilePosition CoverMap::findExpansionSite()
 	UnitType baseType = Broodwar->self()->getRace().getCenter();
 	double bestDist = 100000;
 	TilePosition bestPos = TilePosition(-1, -1);
+	int basesPerLocation = 1;
+
+	if (BuildPlanner::isZerg())
+	{
+		int numBases = 0;
+		vector<BaseAgent*> agents = AgentManager::getInstance()->getAgents();
+		for (vector<BaseAgent*>::iterator it = agents.begin(); it != agents.end(); ++it)
+		{
+			if ((*it)->getUnitType().isResourceDepot())
+			{
+				numBases++;
+			}
+		}
+
+		if (numBases < 2)
+		{
+			basesPerLocation = 2;
+		}
+	}
 	
 	//Iterate through all base locations
 	for(set<BWTA::BaseLocation*>::const_iterator i=BWTA::getBaseLocations().begin(); i!= BWTA::getBaseLocations().end(); i++)
@@ -756,14 +775,8 @@ TilePosition CoverMap::findExpansionSite()
 				}
 			}
 		}
-		if (BuildPlanner::isZerg())
-		{
-			if (noBases >= 2) taken = true;
-		}
-		else
-		{
-			if (noBases >= 1) taken = true;
-		}
+
+		if (noBases >= basesPerLocation) taken = true;
 
 		//Check if enemy buildings are close
 		int eCnt = ExplorationManager::getInstance()->spottedBuildingsWithinRange(pos, 20);
