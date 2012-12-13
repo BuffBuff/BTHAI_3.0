@@ -803,9 +803,13 @@ TilePosition Squad::getCenter()
 	{
 		if (agents.at(i)->isAlive())
 		{
-			cX += agents.at(i)->getUnit()->getTilePosition().x();
-			cY += agents.at(i)->getUnit()->getTilePosition().y();
-			cnt++;
+			TilePosition pos = agents.at(i)->getUnit()->getTilePosition();
+			if (pos.isValid())
+			{
+				cX += pos.x();
+				cY += pos.y();
+				cnt++;
+			}
 		}
 	}
 
@@ -827,11 +831,15 @@ TilePosition Squad::getCenter()
 		{
 			if ( (isAir() && agents.at(i)->getUnitType().isFlyer()) || (isGround() && !agents.at(i)->getUnitType().isFlyer()))
 			{
-				double dist = agents.at(i)->getUnit()->getTilePosition().getDistance(c);
-				if (dist < bestDist)
+				TilePosition pos = agents.at(i)->getUnit()->getTilePosition();
+				if (pos.isValid())
 				{
-					bestDist = dist;
-					bestSpot = agents.at(i)->getUnit()->getTilePosition();
+					double dist = pos.getDistance(c);
+					if (dist < bestDist)
+					{
+						bestDist = dist;
+						bestSpot = pos;
+					}
 				}
 			}
 		}
