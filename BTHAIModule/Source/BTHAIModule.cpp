@@ -78,7 +78,7 @@ void BTHAIModule::gameStopped()
 {
 	//statistics->WriteStatisticsFile(isWinner);
 	Pathfinder::getInstance()->stop();
-	delete(statistics);
+	//delete(statistics);
 	Profiler::getInstance()->dumpToFile();
 	running = false;
 }

@@ -17,6 +17,7 @@ using namespace std;
 class QueenAgent : public UnitAgent {
 
 private:
+	bool BioUnitNotParasite(Unit* target);
 	
 public:
 	QueenAgent(Unit* mUnit);
