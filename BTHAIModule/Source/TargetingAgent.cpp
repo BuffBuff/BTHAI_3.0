@@ -26,6 +26,7 @@ Unit* TargetingAgent::findTarget(BaseAgent* agent)
 		bool canAttack = false;
 		if (!t.isFlyer() && targetsGround) canAttack = true;
 		if ((t.isFlyer() || (*i)->isLifted()) && targetsAir) canAttack = true;
+		if (t.hasPermanentCloak() && !(*i)->isDetected()) canAttack = false;
 
 		if (canAttack)
 		{
@@ -48,6 +49,11 @@ Unit* TargetingAgent::findTarget(BaseAgent* agent)
 
 double TargetingAgent::getTargetModifier(UnitType attacker, UnitType target)
 {
+	if (target.getID() == UnitTypes::Protoss_Pylon.getID())
+	{
+		return 100.f;
+	}
+
 	//Non-attacking buildings
 	if (target.isBuilding() && !target.canAttack()) 
 	{
