@@ -24,25 +24,58 @@ bool QueenAgent::BioUnitNotParasite(Unit* target) //Possibly needs UnitAgent*
 	return true;
 }
 
-void QueenAgent::computeActions()
+void QueenAgent::Parasite()
 {
+//Parasite
 	Unit* target;
-	//TODO: Make it able to target.
-	if(enemyUnitsWithinRange(12) > 0 && unit->getEnergy() >= 75)
-	{
-			target = getClosestOrganicEnemy(12);
-			if(target == NULL)
-				return;
-	Broodwar->printf("I see %d enemy units", enemyUnitsWithinRange(12));
-		
 	if (BioUnitNotParasite(target))
 		{
 			unit->useTech(TechTypes::Parasite, target);
 			Broodwar->sendText("You just got AIDS, muthafudgah!");
 			return;
 		}
+}
+
+void QueenAgent::Broodling()
+{
+	Unit* target;
+	unit->useTech(TechTypes::Spawn_Broodlings, target);
+	Broodwar->sendText("You just got AIDS, muthafudgah!");
+}
+
+void QueenAgent::computeActions()
+{
+	if(getUnit()->getEnergy() < 150)
+	{
+		Broodwar->printf("I are funnnny! %d", getUnit()->getEnergy());
+		return;
 	}
+	else
+	{
+		Broodwar->printf("Off I go then!");
+	}
+
+	Unit* target;
+	if(enemyUnitsWithinRange(12) > 0)
+	{
+	Broodwar->printf("I see %d enemy units", enemyUnitsWithinRange(12));
+			target = getClosestOrganicEnemy(12);
+			if(target == NULL)
+				return;
+
+			if(target->getType().isWorker())
+			{
+				Broodling();
+				return;
+			}
+			/*else if(getUnit()->getEnergy() >= 75)
+			{
+				Parasite();
+				return;
+			}*/
+
 	
+	}
 
 	bool defensive = true;
 	PFManager::getInstance()->computeAttackingUnitActions(this, goal, defensive);

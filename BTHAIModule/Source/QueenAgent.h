@@ -18,6 +18,8 @@ class QueenAgent : public UnitAgent {
 
 private:
 	bool BioUnitNotParasite(Unit* target);
+	void Parasite();
+	void Broodling();
 	
 public:
 	QueenAgent(Unit* mUnit);
