@@ -62,10 +62,6 @@ public:
 	/** Returns the id for this Squad. */
 	int getID();
 
-	/** Adds a requirement that needs to be fulfilled before this Squad is filled with units.
-	 * For example (Protoss_Zealot, 10), then the Squad will be filled once 10 Zealots has been built. */
-	void addRequirement(UnitType type, int no);
-
 	/** Returns the next starting area to visit, if opponent has not been spotted. */
 	TilePosition getNextStartLocation();
 
