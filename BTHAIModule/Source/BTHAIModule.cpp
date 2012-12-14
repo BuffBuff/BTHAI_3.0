@@ -88,9 +88,35 @@ void BTHAIModule::onEnd(bool isWinner)
 	gameStopped();
 }
 
+const static char* taunts[] =
+{
+	"Hello fellow bot! glhf",
+	"power overvhelming",
+	"hmm...",
+	"power overwhelning",
+	"black cheap wall",
+	"black sheep wallé"
+};
+
+const static int numTaunts = sizeof(taunts) / sizeof(char*);
+
+static int currTaunt = 0;
+const static int framesPerTaunt = 600;
+
+static void taunt()
+{
+	if (currTaunt < numTaunts && Broodwar->getFrameCount() > (currTaunt + 1) * framesPerTaunt)
+	{
+		Broodwar->sendText(taunts[currTaunt]);
+		currTaunt++;
+	}
+}
+
 void BTHAIModule::onFrame() 
 {
 	Profiler::getInstance()->start("OnFrame");
+
+	taunt();
 
 	if (!running) 
 	{
