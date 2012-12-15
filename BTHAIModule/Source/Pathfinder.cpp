@@ -12,7 +12,7 @@ Pathfinder::Pathfinder()
 	running = true;
 	lock = false;
 	end = false;
-	CreateThread();
+	//CreateThread();
 }
 
 Pathfinder::~Pathfinder()
@@ -65,6 +65,7 @@ void Pathfinder::requestPath(TilePosition start, TilePosition end)
 	if (obj == NULL) 
 	{
 		obj = new PathObj(start, end);
+		obj->calculatePath();
 		pathObj.push_back(obj);
 	}
 
@@ -109,7 +110,7 @@ void Pathfinder::stop()
 {
 	running = false;
 
-	WaitForSingleObject(GetThreadHandle(), INFINITE);
+	//WaitForSingleObject(GetThreadHandle(), INFINITE);
 }
 
 bool Pathfinder::isRunning()
