@@ -803,13 +803,16 @@ TilePosition Squad::getCenter()
 	{
 		if (agents.at(i)->isAlive())
 		{
-			TilePosition pos = agents.at(i)->getUnit()->getTilePosition();
-			if (pos.isValid())
+			TilePosition unitPos = agents.at(i)->getUnit()->getTilePosition();
+			if (!unitPos.isValid())
 			{
-				cX += pos.x();
-				cY += pos.y();
-				cnt++;
+				Broodwar->printf("Encountered invalid position, skipping");
+				continue;
 			}
+
+			cX += unitPos.x();
+			cY += unitPos.y();
+			cnt++;
 		}
 	}
 
@@ -829,20 +832,25 @@ TilePosition Squad::getCenter()
 	{
 		if (agents.at(i)->isAlive())
 		{
+			TilePosition unitPos = agents.at(i)->getUnit()->getTilePosition();
+			if (!unitPos.isValid())
+				continue;
+
 			if ( (isAir() && agents.at(i)->getUnitType().isFlyer()) || (isGround() && !agents.at(i)->getUnitType().isFlyer()))
 			{
-				TilePosition pos = agents.at(i)->getUnit()->getTilePosition();
-				if (pos.isValid())
+				double dist = unitPos.getDistance(c);
+				if (dist < bestDist)
 				{
-					double dist = pos.getDistance(c);
-					if (dist < bestDist)
-					{
-						bestDist = dist;
-						bestSpot = pos;
-					}
+					bestDist = dist;
+					bestSpot = unitPos;
 				}
 			}
 		}
+	}
+
+	if (!bestSpot.isValid())
+	{
+		Broodwar->printf("Invalid positions has distrupted the time-space continuum, expect the universe to implode.");
 	}
 
 	return bestSpot;
