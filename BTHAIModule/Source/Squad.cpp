@@ -845,6 +845,11 @@ TilePosition Squad::getCenter()
 		}
 	}
 
+	if (!bestSpot.isValid())
+	{
+		Broodwar->printf("Invalid positions has distrupted the time-space continuum, expect the universe to implode.");
+	}
+
 	return bestSpot;
 }
 

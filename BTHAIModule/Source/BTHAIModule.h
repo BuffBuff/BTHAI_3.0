@@ -52,6 +52,5 @@ public:
 	virtual void onSaveGame(std::string gameName);
 
 	int speed;
-	Statistics* statistics;
 	AIloop* loop;
 };

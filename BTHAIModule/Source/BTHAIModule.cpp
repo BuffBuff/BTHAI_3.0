@@ -78,7 +78,6 @@ void BTHAIModule::gameStopped()
 {
 	//statistics->WriteStatisticsFile(isWinner);
 	Pathfinder::getInstance()->stop();
-	//delete(statistics);
 	Profiler::getInstance()->dumpToFile();
 	running = false;
 }
@@ -116,7 +115,6 @@ void BTHAIModule::onFrame()
 {
 	Profiler::getInstance()->start("OnFrame");
 
-	taunt();
 
 	if (!running) 
 	{
@@ -134,6 +132,8 @@ void BTHAIModule::onFrame()
 		//Replay. Do nothing.
 		return;
 	}
+
+	taunt();
 	
 	loop->computeActions();
 	loop->show_debug();
