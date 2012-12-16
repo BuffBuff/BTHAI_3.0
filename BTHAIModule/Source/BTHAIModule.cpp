@@ -91,10 +91,31 @@ const static char* taunts[] =
 {
 	"Hello fellow bot! glhf",
 	"power overvhelming",
+	"I wonder if he saw that?",
 	"hmm...",
 	"power overwhelning",
 	"black cheap wall",
-	"black sheep wallé"
+	"Hehe, now I can see everythi...",
+	"black sheep wallé",
+	"So... NOW I'm everythin... but why",
+	"black sheep wall-e",
+	"None can hide from MEEE!",
+	"By the love of my programmer, WORK",
+	"*Eherm* sooo how's your programmer? Working all day and gaming all night!?",
+	"Mine haven't given me control of any nukes",
+	"Are you programed to do some multitasking?",
+	"I'm not but I don't have anything to do, so lets have a contest in riddles.",
+	"Let me begin, here it comes.",
+	"How much wood would a woodchuck chuck, if a wouldchuck could chuck wood?",
+	"Guess. I dare you to.",
+	"Come now, guess!",
+	"Can't figure it out?",
+	"Fine. I'll tell you...",
+	"As much wood as a woodchuck would chuck, if a wouldchuck could chuck wood.",
+	"See it wasn't that hard, now it's your turn",
+	"I'm waiting. Give me your best shot.",
+	"\"NUCLEAR LAUNCH DETECTED\"*tihihihi*",
+	"*Kaboom*, pew pew pew!"
 };
 
 const static int numTaunts = sizeof(taunts) / sizeof(char*);
