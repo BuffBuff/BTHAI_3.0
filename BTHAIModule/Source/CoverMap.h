@@ -83,6 +83,9 @@ public:
 	 * false otherwise. */
 	bool canBuild(UnitType toBuild, TilePosition buildSpot);
 
+	/** Checks if the entire build position is covered by creep. */
+	bool hasFullCreep(UnitType toBuild, TilePosition buildSpot);
+
 	/** Checks if a position is free. */
 	bool positionFree(TilePosition pos);
 

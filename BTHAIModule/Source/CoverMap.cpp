@@ -220,7 +220,7 @@ bool CoverMap::canBuild(UnitType toBuild, TilePosition buildSpot)
 		}
 		else if (toBuild.requiresCreep())
 		{
-			if (!Broodwar->hasCreep(buildSpot))
+			if (!hasFullCreep(toBuild, buildSpot))
 			{
 				return false;
 			}
@@ -237,6 +237,25 @@ bool CoverMap::canBuild(UnitType toBuild, TilePosition buildSpot)
 	}*/
 
 	//All passed. It is possible to build here.
+	return true;
+}
+
+bool CoverMap::hasFullCreep(UnitType toBuild, TilePosition buildSpot)
+{
+	int endX = buildSpot.x() + toBuild.tileWidth();
+	int endY = buildSpot.y() + toBuild.tileHeight();
+
+	for (int x = buildSpot.x(); x < endX; x++)
+	{
+		for (int y = buildSpot.y(); y < endY; y++)
+		{
+			if (!Broodwar->hasCreep(x, y))
+			{
+				return false;
+			}
+		}
+	}
+
 	return true;
 }
 
