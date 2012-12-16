@@ -24,10 +24,9 @@ bool QueenAgent::BioUnitNotParasite(Unit* target) //Possibly needs UnitAgent*
 	return true;
 }
 
-void QueenAgent::Parasite()
+void QueenAgent::Parasite(Unit* target)
 {
 //Parasite
-	Unit* target;
 	if (BioUnitNotParasite(target))
 		{
 			unit->useTech(TechTypes::Parasite, target);
@@ -36,23 +35,18 @@ void QueenAgent::Parasite()
 		}
 }
 
-void QueenAgent::Broodling()
+void QueenAgent::Broodling(Unit* target)
 {
-	Unit* target;
 	unit->useTech(TechTypes::Spawn_Broodlings, target);
-	Broodwar->sendText("You just got AIDS, muthafudgah!");
+	Broodwar->sendText("You should have used a condom, but now you got twins!");
 }
 
 void QueenAgent::computeActions()
 {
 	if(getUnit()->getEnergy() < 150)
 	{
-		Broodwar->printf("I are funnnny! %d", getUnit()->getEnergy());
+		//Broodwar->printf("I are funnnny! %d", getUnit()->getEnergy());
 		return;
-	}
-	else
-	{
-		Broodwar->printf("Off I go then!");
 	}
 
 	Unit* target;
@@ -63,11 +57,8 @@ void QueenAgent::computeActions()
 			if(target == NULL)
 				return;
 
-			if(target->getType().isWorker())
-			{
-				Broodling();
-				return;
-			}
+			Broodling(target);
+			return;
 			/*else if(getUnit()->getEnergy() >= 75)
 			{
 				Parasite();
