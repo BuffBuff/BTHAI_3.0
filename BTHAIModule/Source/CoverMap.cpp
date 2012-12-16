@@ -311,7 +311,14 @@ TilePosition CoverMap::findBuildSpot(UnitType toBuild)
 		if (cp.x() != -1)
 		{
 			TilePosition spot = findBuildSpot(toBuild, cp);
-			return spot;
+			if (spot.x() < 0)
+				Broodwar->printf("Chokepoint out of range");
+			else
+				return spot;
+		}
+		else
+		{
+			Broodwar->printf("Found no chokepoint");
 		}
 	}
 
