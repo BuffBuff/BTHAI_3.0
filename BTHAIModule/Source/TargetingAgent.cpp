@@ -26,7 +26,7 @@ Unit* TargetingAgent::findTarget(BaseAgent* agent)
 		bool canAttack = false;
 		if (!t.isFlyer() && targetsGround) canAttack = true;
 		if ((t.isFlyer() || (*i)->isLifted()) && targetsAir) canAttack = true;
-		if (t.hasPermanentCloak() && !(*i)->isDetected()) canAttack = false;
+		if ((t.hasPermanentCloak() || (*i)->isBurrowed()) && !(*i)->isDetected()) canAttack = false;
 
 		if (canAttack)
 		{
