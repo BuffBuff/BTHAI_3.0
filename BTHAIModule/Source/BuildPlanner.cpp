@@ -71,6 +71,8 @@ void BuildPlanner::computeActions()
 		int elapsed = cFrame - buildQueue.at(i).assignedFrame;
 		if (elapsed >= 2000)
 		{
+			Broodwar->printf("Failed to build %s in time, resetting order", buildQueue.at(i).toBuild.getName().c_str());
+
 			//Reset the build request
 			WorkerAgent* worker = (WorkerAgent*)AgentManager::getInstance()->getAgent(buildQueue.at(i).assignedWorkerId);
 			if (worker != NULL)
