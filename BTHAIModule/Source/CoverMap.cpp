@@ -647,7 +647,7 @@ TilePosition CoverMap::findRefineryBuildSpot(UnitType toBuild, TilePosition star
 			double dist = buildSpot.getDistance(base->getUnit()->getTilePosition());
 			if (dist >= 13) 
 			{
-				Broodwar->printf("Gas too far away from base (%d)", (int)dist);
+				//Broodwar->printf("Gas too far away from base (%d)", (int)dist);
 				return TilePosition(-1,-1);
 			}
 		}

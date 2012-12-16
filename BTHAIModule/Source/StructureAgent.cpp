@@ -181,8 +181,8 @@ void StructureAgent::computeActions()
 				//Check if we can (and need) to build the unit
 				if (canBuildUnit(*i))
 				{
-					if (BuildPlanner::getInstance()->nextIsOfType(UnitTypes::Zerg_Hatchery))
-						Broodwar->printf("Training %s, despite hatchery in build order", unit->getType().getName().c_str());
+					//if (BuildPlanner::getInstance()->nextIsOfType(UnitTypes::Zerg_Hatchery))
+						//Broodwar->printf("Training %s, despite hatchery in build order", unit->getType().getName().c_str());
 
 					//Build it!
 					unit->train(*i);
@@ -229,7 +229,7 @@ bool StructureAgent::canBuildUnit(UnitType type)
 
 	if (BuildPlanner::getInstance()->nextIsOfType(UnitTypes::Zerg_Hatchery))
 	{
-		Broodwar->printf("Build %s despite hatchery in build order", type.getName().c_str());
+		//Broodwar->printf("Build %s despite hatchery in build order", type.getName().c_str());
 	}
 
 	return true;
@@ -311,8 +311,8 @@ bool StructureAgent::canEvolveUnit(UnitType type)
 		return false;
 	}
 
-	if (BuildPlanner::getInstance()->nextIsOfType(UnitTypes::Zerg_Hatchery))
-		Broodwar->printf("Evolving %s despite hatchery in build order", type.getName().c_str());
+	//if (BuildPlanner::getInstance()->nextIsOfType(UnitTypes::Zerg_Hatchery))
+	//	Broodwar->printf("Evolving %s despite hatchery in build order", type.getName().c_str());
 
 	//All clear. Build the unit.
 	return true;
