@@ -10,32 +10,32 @@ UpgradesFileReader::UpgradesFileReader()
 
 }
 
-vector<UpgradeType> UpgradesFileReader::getUpgradesP1()
+vector<UpgradePlan> UpgradesFileReader::getUpgradesP1()
 {
 	return upgradesP1;
 }
 
-vector<UpgradeType> UpgradesFileReader::getUpgradesP2()
+vector<UpgradePlan> UpgradesFileReader::getUpgradesP2()
 {
 	return upgradesP2;
 }
 
-vector<UpgradeType> UpgradesFileReader::getUpgradesP3()
+vector<UpgradePlan> UpgradesFileReader::getUpgradesP3()
 {
 	return upgradesP3;
 }
 
-vector<TechType> UpgradesFileReader::getTechsP1()
+vector<TechPlan> UpgradesFileReader::getTechsP1()
 {
 	return techsP1;
 }
 
-vector<TechType> UpgradesFileReader::getTechsP2()
+vector<TechPlan> UpgradesFileReader::getTechsP2()
 {
 	return techsP2;
 }
 
-vector<TechType> UpgradesFileReader::getTechsP3()
+vector<TechPlan> UpgradesFileReader::getTechsP3()
 {
 	return techsP3;
 }
@@ -86,24 +86,35 @@ void UpgradesFileReader::addUpgrade(string line)
 	//Replace all _ with whitespaces, or they wont match
 	replace(line);
 	Tokens tokens = split(line, ":");
+
+	if (tokens.value == "")
+		return;
+
+	Tokens values = split(tokens.value, ",");
+
+	int value = toInt(values.key);
 	
+	int frameDelay = 0;
+	if (values.value != "")
+		frameDelay = toInt(values.value);
+
 	UpgradeType type = getUpgradeType(tokens.key);
 	if (type.getID() != UpgradeTypes::Unknown.getID())
 	{
-		int value = toInt(tokens.value);
-		if (value == 1) upgradesP1.push_back(type);
-		if (value == 2) upgradesP2.push_back(type);
-		if (value == 3) upgradesP2.push_back(type);
+		UpgradePlan upPlan = {type, frameDelay};
+		if (value == 1) upgradesP1.push_back(upPlan);
+		if (value == 2) upgradesP2.push_back(upPlan);
+		if (value == 3) upgradesP2.push_back(upPlan);
 		return;
 	}
 	
 	TechType ttype = getTechType(tokens.key);
 	if (ttype.getID() != TechTypes::Unknown.getID())
 	{
-		int value = toInt(tokens.value);
-		if (value == 1) techsP1.push_back(ttype);
-		if (value == 2) techsP1.push_back(ttype);
-		if (value == 3) techsP1.push_back(ttype);
+		TechPlan techPlan = {ttype, frameDelay};
+		if (value == 1) techsP1.push_back(techPlan);
+		if (value == 2) techsP1.push_back(techPlan);
+		if (value == 3) techsP1.push_back(techPlan);
 		return;
 	}
 

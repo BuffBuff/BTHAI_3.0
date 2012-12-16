@@ -193,5 +193,10 @@ Tokens FileReaderUtils::split(string line, string delimiter)
 		tokens.key = line.substr(0, eqIndex);
 		tokens.value = line.substr(eqIndex + 1, line.length());
 	}
+	else
+	{
+		tokens.key = line;
+	}
+
 	return tokens;
 }

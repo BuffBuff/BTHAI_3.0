@@ -1,5 +1,4 @@
 #include "UpgradesPlanner.h"
-#include "UpgradesFileReader.h"
 #include "BuildPlanner.h"
 #include "AgentManager.h"
 #include "ResourceManager.h"
@@ -42,7 +41,11 @@ bool UpgradesPlanner::checkUpgrade(BaseAgent* agent)
 		//Check techsP1
 		for (int i = 0; i < (int)techsP1.size(); i++)
 		{
-			TechType type = techsP1.at(i);
+			TechPlan plan = techsP1.at(i);
+			if (Broodwar->getFrameCount() < plan.frameDelay)
+				continue;
+
+			TechType type = plan.type;
 			if (Broodwar->self()->hasResearched(type))
 			{
 				techsP1.erase(techsP1.begin() + i);
@@ -59,7 +62,11 @@ bool UpgradesPlanner::checkUpgrade(BaseAgent* agent)
 		{
 			for (int i = 0; i < (int)techsP2.size(); i++)
 			{
-				TechType type = techsP2.at(i);
+				TechPlan plan = techsP2.at(i);
+				if (Broodwar->getFrameCount() < plan.frameDelay)
+					continue;
+
+				TechType type = plan.type;
 				if (Broodwar->self()->hasResearched(type))
 				{
 					techsP2.erase(techsP2.begin() + i);
@@ -77,7 +84,11 @@ bool UpgradesPlanner::checkUpgrade(BaseAgent* agent)
 		{
 			for (int i = 0; i < (int)techsP3.size(); i++)
 			{
-				TechType type = techsP3.at(i);
+				TechPlan plan = techsP2.at(i);
+				if (Broodwar->getFrameCount() < plan.frameDelay)
+					continue;
+
+				TechType type = plan.type;
 				if (Broodwar->self()->hasResearched(type))
 				{
 					techsP3.erase(techsP3.begin() + i);
@@ -94,7 +105,11 @@ bool UpgradesPlanner::checkUpgrade(BaseAgent* agent)
 		//Check upgradesP1
 		for (int i = 0; i < (int)upgradesP1.size(); i++)
 		{
-			UpgradeType type = upgradesP1.at(i);
+			UpgradePlan plan = upgradesP1.at(i);
+			if (Broodwar->getFrameCount() < plan.frameDelay)
+				continue;
+
+			UpgradeType type = plan.type;
 			if (canUpgrade(type, unit))
 			{
 				if (unit->upgrade(type))
@@ -109,7 +124,11 @@ bool UpgradesPlanner::checkUpgrade(BaseAgent* agent)
 		{
 			for (int i = 0; i < (int)upgradesP2.size(); i++)
 			{
-				UpgradeType type = upgradesP2.at(i);
+				UpgradePlan plan = upgradesP2.at(i);
+				if (Broodwar->getFrameCount() < plan.frameDelay)
+					continue;
+
+				UpgradeType type = plan.type;
 				if (canUpgrade(type, unit))
 				{
 					if (unit->upgrade(type))
@@ -125,7 +144,11 @@ bool UpgradesPlanner::checkUpgrade(BaseAgent* agent)
 		{
 			for (int i = 0; i < (int)upgradesP3.size(); i++)
 			{
-				UpgradeType type = upgradesP3.at(i);
+				UpgradePlan plan = upgradesP3.at(i);
+				if (Broodwar->getFrameCount() < plan.frameDelay)
+					continue;
+
+				UpgradeType type = plan.type;
 				if (canUpgrade(type, unit))
 				{
 					if (unit->upgrade(type))

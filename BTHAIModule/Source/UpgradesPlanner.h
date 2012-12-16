@@ -3,6 +3,7 @@
 
 #include <BWAPI.h>
 #include "BaseAgent.h"
+#include "UpgradesFileReader.h"
 
 using namespace BWAPI;
 using namespace std;
@@ -22,12 +23,12 @@ private:
 
 	UpgradesPlanner();
 	
-	vector<UpgradeType> upgradesP1;
-	vector<UpgradeType> upgradesP2;
-	vector<UpgradeType> upgradesP3;
-	vector<TechType> techsP1;
-	vector<TechType> techsP2;
-	vector<TechType> techsP3;
+	vector<UpgradePlan> upgradesP1;
+	vector<UpgradePlan> upgradesP2;
+	vector<UpgradePlan> upgradesP3;
+	vector<TechPlan> techsP1;
+	vector<TechPlan> techsP2;
+	vector<TechPlan> techsP3;
 
 	bool canUpgrade(UpgradeType type, Unit* unit);
 	bool canResearch(TechType type, Unit* unit);
