@@ -29,7 +29,11 @@ bool PathObj::isFinished()
 
 void PathObj::calculatePath() 
 {
-	path = getShortestPath(start, end);
+	if (!start.isValid() || !end.isValid())
+		Broodwar->printf("Requested path finding from (%d, %d) to (%d, %d), which is invalid", start.x(), start.y(), end.x(), end.y());
+	else
+		path = getShortestPath(start, end);
+
 	finished = true;
 }
 

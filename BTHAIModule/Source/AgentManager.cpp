@@ -416,12 +416,13 @@ bool AgentManager::unitsInArea(TilePosition pos, int tileWidth, int tileHeight, 
 {
 	for (int i = 0; i < (int)agents.size(); i++)
 	{
-		if (agents.at(i)->isAlive())
+		BaseAgent* agent = agents.at(i);
+		if (agent->isAlive())
 		{
-			if (agents.at(i)->getUnit()->getID() != unitID)
+			if (agent->getUnit()->getID() != unitID)
 			{
-				TilePosition aPos = agents.at(i)->getUnit()->getTilePosition();
-				UnitType type = agents.at(i)->getUnit()->getType();
+				TilePosition aPos = agent->getUnit()->getTilePosition();
+				UnitType type = agent->getUnit()->getType();
 				if (!(aPos.x() > pos.x() + tileWidth || aPos.x() + type.tileWidth() < pos.x() || aPos.y() > pos.y() + tileWidth || aPos.y() + type.tileHeight() < pos.y()))
 				{
 					return true;
