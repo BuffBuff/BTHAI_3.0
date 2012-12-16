@@ -302,27 +302,40 @@ void BTHAIModule::onUnitCreate(BWAPI::Unit* unit)
 {
 	if (Broodwar->isReplay() || Broodwar->getFrameCount() <= 1) return;
 
-	loop->addUnit(unit);
+	if (unit->getPlayer()->getID() == Broodwar->self()->getID())
+	{
+		loop->addUnit(unit);
+	}
 }
 
 void BTHAIModule::onUnitDestroy(BWAPI::Unit* unit) 
 {
 	if (Broodwar->isReplay() || Broodwar->getFrameCount() <= 1) return;
 
-	loop->unitDestroyed(unit);
+	if (unit->getPlayer()->getID() == Broodwar->self()->getID())
+	{
+		loop->unitDestroyed(unit);
+	}
+	else if (unit->getPlayer()->isEnemy(Broodwar->self()))
+	{
+		loop->enemyUnitDestroyed(unit);
+	}
 }
 
 void BTHAIModule::onUnitMorph(BWAPI::Unit* unit) 
 {
 	if (Broodwar->isReplay() || Broodwar->getFrameCount() <= 1) return;
 
-	if (BuildPlanner::isZerg())
+	if (unit->getPlayer()->getID() == Broodwar->self()->getID())
 	{
-		loop->morphUnit(unit);
-	}
-	else
-	{
-		loop->addUnit(unit);
+		if (unit->getType().getRace().getID() == Races::Zerg.getID())
+		{
+			loop->morphUnit(unit);
+		}
+		else
+		{
+			loop->addUnit(unit);
+		}
 	}
 }
 

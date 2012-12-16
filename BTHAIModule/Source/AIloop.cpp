@@ -59,33 +59,31 @@ void AIloop::morphUnit(Unit* unit)
 
 void AIloop::unitDestroyed(Unit* unit)
 {
-	if (unit->getPlayer()->getID() == Broodwar->self()->getID())
+	AgentManager::getInstance()->removeAgent(unit);
+	if (unit->getType().isBuilding())
 	{
-		AgentManager::getInstance()->removeAgent(unit);
-		if (unit->getType().isBuilding())
-		{
-			BuildPlanner::getInstance()->buildingDestroyed(unit);
-		}
-
-		//Assist workers under attack
-		if (unit->getType().isWorker())
-		{
-			Commander::getInstance()->assistWorker(AgentManager::getInstance()->getAgent(unit->getID()));
-		}
-
-		//Update dead score
-		if (unit->getType().canMove())
-		{
-			Commander::getInstance()->ownDeadScore += unit->getType().destroyScore();
-		}
-
-		AgentManager::getInstance()->cleanup();
+		BuildPlanner::getInstance()->buildingDestroyed(unit);
 	}
-	if (unit->getPlayer()->getID() != Broodwar->self()->getID() && !unit->getPlayer()->isNeutral())
+
+	//Assist workers under attack
+	if (unit->getType().isWorker())
 	{
-		ExplorationManager::getInstance()->unitDestroyed(unit);
-		Commander::getInstance()->enemyDeadScore += unit->getType().destroyScore();
+		Commander::getInstance()->assistWorker(AgentManager::getInstance()->getAgent(unit->getID()));
 	}
+
+	//Update dead score
+	if (unit->getType().canMove())
+	{
+		Commander::getInstance()->ownDeadScore += unit->getType().destroyScore();
+	}
+
+	AgentManager::getInstance()->cleanup();
+}
+
+void AIloop::enemyUnitDestroyed(Unit* unit)
+{
+	ExplorationManager::getInstance()->unitDestroyed(unit);
+	Commander::getInstance()->enemyDeadScore += unit->getType().destroyScore();
 }
 
 void AIloop::show_debug()
