@@ -17,6 +17,9 @@ using namespace std;
 class DefilerAgent : public UnitAgent {
 
 private:
+	void DarkSwarm(Unit* target);
+	void Plague(Unit* target);
+	void Consume(Unit* target);
 	
 public:
 	DefilerAgent(Unit* mUnit);

@@ -334,6 +334,30 @@ int UnitAgent::enemyAttackingUnitsWithinRange(UnitType type)
 	return enemyGroundAttackingUnitsWithinRange(unit->getTilePosition(), getGroundRange(type)) + enemyAirAttackingUnitsWithinRange(unit->getTilePosition(), getAirRange(type));
 }
 
+Unit* UnitAgent::getClosestEnemy(int maxRange)
+{
+	Unit* enemy = NULL;
+	double bestDist = -1;
+
+	for(set<Unit*>::const_iterator i=Broodwar->enemy()->getUnits().begin();i!=Broodwar->enemy()->getUnits().end();i++)
+	{
+		if ((*i)->exists())
+		{
+			if (!(*i)->getType().isBuilding())
+			{
+				double cDist = unit->getDistance((*i));
+				if (bestDist < 0 || cDist < bestDist)
+				{
+					bestDist = cDist;
+					enemy = (*i);
+				}
+			}
+		}
+	}
+
+	return enemy;
+}
+
 Unit* UnitAgent::getClosestOrganicEnemy(int maxRange)
 {
 	Unit* enemy = NULL;
