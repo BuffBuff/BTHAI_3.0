@@ -46,6 +46,9 @@ public:
 	/** Called when a unit is destroyed in the game. */
 	void unitDestroyed(Unit* unit);
 
+	/** Called when an enemy unit is destroyed in the game. */
+	void enemyUnitDestroyed(Unit* unit);
+
 	/** Called when a unit is morphed in in the game. */
 	void morphUnit(Unit* unit);
 };
