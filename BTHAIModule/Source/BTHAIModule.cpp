@@ -89,6 +89,7 @@ void BTHAIModule::onEnd(bool isWinner)
 
 const static char* taunts[] =
 {
+	"black sheeeeep wall",
 	"Hello fellow bot! glhf",
 	"power overvhelming",
 	"I wonder if he saw that?",

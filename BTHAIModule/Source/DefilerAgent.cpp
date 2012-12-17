@@ -20,13 +20,15 @@ void DefilerAgent::Plague(Unit* target)
 	if(!target->isPlagued())
 	{
 		unit->useTech(TechTypes::Plague, target->getPosition());
-		return;
+		Broodwar->printf("Feel the plague! Where are your Gods now?!");
+		
 	}
-	else
-	{
-		DarkSwarm(target);
-		return;
-	}
+	return;
+	//else
+	//{
+	//	DarkSwarm(target);
+	//	return;
+	//}
 }
 
 void DefilerAgent::DarkSwarm(Unit* target)
@@ -34,13 +36,14 @@ void DefilerAgent::DarkSwarm(Unit* target)
 	if(!target->isUnderDarkSwarm())
 	{
 		unit->useTech(TechTypes::Dark_Swarm, target->getPosition());
+		Broodwar->printf("Thou shalt not see!");
 		return;
 	}
 }
 
 void DefilerAgent::Consume(Unit* target)
 {
-	
+	return;
 }
 
 void DefilerAgent::computeActions()
@@ -48,7 +51,7 @@ void DefilerAgent::computeActions()
 	Unit* target;
 	if(enemyUnitsWithinRange(9) > 0)
 	{
-	Broodwar->printf("I see %d enemy units", enemyUnitsWithinRange(12));
+	//Broodwar->printf("I see %d enemy units", enemyUnitsWithinRange(12));
 			
 	
 	target = getClosestEnemy(9);
@@ -56,13 +59,13 @@ void DefilerAgent::computeActions()
 				return;
 
 			//Plauge
-			if(this->getUnit()->getEnergy() > 150)
+			if(this->getUnit()->getEnergy() >= 150)
 			{
 				Plague(target);
 				return;
 			}
 			//Dark swarm
-			else if(getUnit()->getEnergy() > 100)
+			else if(getUnit()->getEnergy() >= 100)
 			{
 				DarkSwarm(target);
 				return;
@@ -73,7 +76,7 @@ void DefilerAgent::computeActions()
 				Consume(target);				
 				return;
 			}
-
+	}
 
 	bool defensive = true;
 	PFManager::getInstance()->computeAttackingUnitActions(this, goal, defensive);

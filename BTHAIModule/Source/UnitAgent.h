@@ -100,7 +100,7 @@ public:
 	static int getAirRange(UnitType type);
 	
 	/** Returns the nearest enemy unit that's not a building, within a maxRange, or NULL if none found. **/
-	Unit* getClosestEnemy(int maxRange)
+	Unit* getClosestEnemy(int maxRange);
 
 	/** Returns the closest organic enemy unit within maxRange, or NULL if not found. */
 	Unit* getClosestOrganicEnemy(int maxRange);
