@@ -250,13 +250,20 @@ void BTHAIModule::onSendText(std::string text)
 				if (mUnit->getType().isNeutral())
 				{
 					//Neutral unit. Check distance to base.
-					BaseAgent* agent = AgentManager::getInstance()->getAgent(UnitTypes::Terran_Command_Center);
-					double dist = agent->getUnit()->getDistance(mUnit);
-					Broodwar->printf("Distance to base: %d", (int)dist);
+					BaseAgent* agent = AgentManager::getInstance()->getClosestBase(mUnit->getTilePosition());
+					if (agent != NULL)
+					{
+						double dist = agent->getUnit()->getDistance(mUnit);
+						Broodwar->printf("Distance to base: %d", (int)dist);
+					}
 				}
 			}
 			
 		}
+	}
+	else if (text=="f")
+	{
+		Broodwar->printf("Current frame: %d", Broodwar->getFrameCount());
 	}
 	else 
 	{
