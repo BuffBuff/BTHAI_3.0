@@ -6,7 +6,6 @@
 #include "CoverMap.h"
 #include "UnitSetup.h"
 #include "ExplorationManager.h"
-#include "BuildOrderFileReader.h"
 #include "ResourceManager.h"
 
 BuildPlanner* BuildPlanner::instance = NULL;
@@ -46,7 +45,8 @@ void BuildPlanner::buildingDestroyed(Unit* building)
 	{
 		return;
 	}
-	buildOrder.insert(buildOrder.begin(), building->getType());
+
+	addBuildingFirst(building->getType());
 }
 
 void BuildPlanner::computeActions()
@@ -79,7 +79,9 @@ void BuildPlanner::computeActions()
 			{
 				worker->reset();
 			}
-			buildOrder.insert(buildOrder.begin(), buildQueue.at(i).toBuild);
+
+			addBuildingFirst(buildQueue.at(i).toBuild);
+
 			ResourceManager::getInstance()->unlockResources(buildQueue.at(i).toBuild);
 			buildQueue.erase(buildQueue.begin() + i);
 			return;
@@ -92,14 +94,19 @@ void BuildPlanner::computeActions()
 	{
 		if (shallBuildSupply())
 		{
-			buildOrder.insert(buildOrder.begin(), Broodwar->self()->getRace().getSupplyProvider());
+			addBuildingFirst(Broodwar->self()->getRace().getSupplyProvider());
 		}
 	}
 
 	//Check if we can build next building in the buildorder
 	if ((int)buildOrder.size() > 0)
 	{
-		executeOrder(buildOrder.at(0));
+		BuildPlan plan = buildOrder.at(0);
+
+		if (plan.frameDelay <= Broodwar->getFrameCount())
+		{
+			executeOrder(plan.type);
+		}
 	}
 
 	if (!hasResourcesLeft() || ResourceManager::getInstance()->hasResources(2000, 0, false))
@@ -169,7 +176,7 @@ bool BuildPlanner::shallBuildSupply()
 	{
 		if (buildOrder.size() > 0)
 		{
-			if (buildOrder.at(0).getID() != UnitTypes::Protoss_Pylon.getID())
+			if (buildOrder.at(0).type.getID() != UnitTypes::Protoss_Pylon.getID())
 			{
 				vector<BaseAgent*> agents = AgentManager::getInstance()->getAgents();
 				for (int i = 0; i < (int)agents.size(); i++)
@@ -269,7 +276,7 @@ bool BuildPlanner::supplyBeingBuilt()
 
 void BuildPlanner::lock(int buildOrderIndex, int unitId)
 {
-	UnitType type = buildOrder.at(buildOrderIndex);
+	UnitType type = buildOrder.at(buildOrderIndex).type;
 	buildOrder.erase(buildOrder.begin() + buildOrderIndex);
 
 	BuildQueueItem item;
@@ -284,7 +291,7 @@ void BuildPlanner::remove(UnitType type)
 {
 	for (int i = 0; i < (int)buildOrder.size(); i++)
 	{
-		if (buildOrder.at(i).getID() == type.getID())
+		if (buildOrder.at(i).type.getID() == type.getID())
 		{
 			buildOrder.erase(buildOrder.begin() + i);
 			return;
@@ -311,7 +318,8 @@ void BuildPlanner::handleWorkerDestroyed(UnitType type, int workerID)
 		if (buildQueue.at(i).assignedWorkerId == workerID)
 		{
 			buildQueue.erase(buildQueue.begin() + i);
-			buildOrder.insert(buildOrder.begin(), type);
+
+			addBuildingFirst(type);
 			ResourceManager::getInstance()->unlockResources(type);
 		}
 	}
@@ -466,7 +474,7 @@ void BuildPlanner::addRefinery()
 
 	if (!this->nextIsOfType(refinery))
 	{
-		buildOrder.insert(buildOrder.begin(), refinery);
+		addBuildingFirst(refinery);
 	}
 }
 
@@ -495,7 +503,7 @@ void BuildPlanner::printInfo()
 	Broodwar->drawTextScreen(5,0,"Buildorder:");
 	for (int i = 0; i < max; i++)
 	{
-		Broodwar->drawTextScreen(5,16*line, format(buildOrder.at(i)).c_str());
+		Broodwar->drawTextScreen(5,16*line, format(buildOrder.at(i).type).c_str());
 		line++;
 	}
 
@@ -536,7 +544,7 @@ void BuildPlanner::handleNoBuildspotFound(UnitType toBuild)
 			//Insert a pylon to increase PSI coverage
 			if (!nextIsOfType(UnitTypes::Protoss_Pylon))
 			{
-				buildOrder.insert(buildOrder.begin(), UnitTypes::Protoss_Pylon);
+				addBuildingFirst(UnitTypes::Protoss_Pylon);
 			}
 		}
 	}
@@ -550,7 +558,7 @@ bool BuildPlanner::nextIsOfType(UnitType type)
 	}
 	else
 	{
-		if (buildOrder.at(0).getID() == type.getID())
+		if (buildOrder.at(0).type.getID() == type.getID())
 		{
 			return true;
 		}
@@ -562,7 +570,7 @@ bool BuildPlanner::containsType(UnitType type)
 {
 	for (int i = 0; i < (int)buildOrder.size(); i++)
 	{
-		if (buildOrder.at(i).getID() == type.getID())
+		if (buildOrder.at(i).type.getID() == type.getID())
 		{
 			return true;
 		}
@@ -595,12 +603,14 @@ bool BuildPlanner::coveredByDetector(TilePosition pos)
 
 void BuildPlanner::addBuilding(UnitType type)
 {
-	buildOrder.push_back(type);
+	BuildPlan plan = { type, 0 };
+	buildOrder.push_back(plan);
 }
 
 void BuildPlanner::addBuildingFirst(UnitType type)
 {
-	buildOrder.insert(buildOrder.begin(), type);
+	BuildPlan plan = { type, 0 };
+	buildOrder.insert(buildOrder.begin(), plan);
 }
 
 void BuildPlanner::expand(UnitType commandCenterUnit)
@@ -617,7 +627,7 @@ void BuildPlanner::expand(UnitType commandCenterUnit)
 		return;
 	}
 
-	buildOrder.insert(buildOrder.begin(), commandCenterUnit);
+	addBuildingFirst(commandCenterUnit);
 }
 
 int BuildPlanner::noInProduction(UnitType type)

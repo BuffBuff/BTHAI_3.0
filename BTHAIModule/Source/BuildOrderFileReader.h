@@ -7,6 +7,12 @@
 using namespace BWAPI;
 using namespace std;
 
+struct BuildPlan
+{
+	UnitType type;
+	int frameDelay;
+};
+
 /** This file reads the buildorder script files.
  *
  * Author: Johan Hagelback (johan.hagelback@gmail.com)
@@ -14,13 +20,13 @@ using namespace std;
 class BuildOrderFileReader : public FileReaderUtils {
 
 private:
-	void addUnitType(string line, vector<UnitType> &buildOrder);
+	void addUnitType(string line, vector<BuildPlan> &buildOrder);
 
 public:
 	BuildOrderFileReader();
 
 	/** Reads the buildorder from script file. */
-	vector<UnitType> readBuildOrder();
+	vector<BuildPlan> readBuildOrder();
 };
 
 #endif

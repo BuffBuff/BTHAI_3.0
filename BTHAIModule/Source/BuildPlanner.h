@@ -2,6 +2,7 @@
 #define __BUILDPLANNER_H__
 
 #include <BWAPI.h>
+#include "BuildOrderFileReader.h"
 
 using namespace BWAPI;
 using namespace std;
@@ -28,7 +29,7 @@ private:
 
 protected:
 	BuildPlanner();
-	vector<UnitType> buildOrder;
+	vector<BuildPlan> buildOrder;
 	vector<BuildQueueItem> buildQueue;
 	void lock(int buildOrderIndex, int unitId);
 	bool executeOrder(UnitType type);

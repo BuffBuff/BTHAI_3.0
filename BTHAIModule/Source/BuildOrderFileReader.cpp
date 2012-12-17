@@ -9,10 +9,10 @@ BuildOrderFileReader::BuildOrderFileReader()
 	
 }
 
-vector<UnitType> BuildOrderFileReader::readBuildOrder()
+vector<BuildPlan> BuildOrderFileReader::readBuildOrder()
 {
 	string filename = getFilename("buildorder");
-	vector<UnitType> buildOrder;
+	vector<BuildPlan> buildOrder;
 
 	//Read buildorder file
 	ifstream inFile;
@@ -52,18 +52,28 @@ vector<UnitType> BuildOrderFileReader::readBuildOrder()
 	return buildOrder;
 }
 
-void BuildOrderFileReader::addUnitType(string line, vector<UnitType> &buildOrder)
+void BuildOrderFileReader::addUnitType(string line, vector<BuildPlan> &buildOrder)
 {
 	if (line == "") return;
 
 	//Replace all _ with whitespaces, or they wont match
 	replace(line);
+
+	Tokens token = split(line, ":");
+
+	int frameDelay = 0;
+	if (!token.value.empty())
+	{
+		frameDelay = toInt(token.value);
+	}
 	
 	for(set<UnitType>::iterator i=UnitTypes::allUnitTypes().begin();i!=UnitTypes::allUnitTypes().end();i++)
 	{
-		if ((*i).getName() == line)
+		if ((*i).getName() == token.key)
 		{
-			buildOrder.push_back((*i));
+			BuildPlan bPlan = { (*i), frameDelay };
+
+			buildOrder.push_back(bPlan);
 			return;
 		}
 	}
