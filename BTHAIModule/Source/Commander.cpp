@@ -19,6 +19,7 @@ Commander::Commander()
 	enemyDeadScore = 0;
 
 	lastCallFrame = Broodwar->getFrameCount();
+	lastRemoveCheckFrame = lastCallFrame;
 
 	SquadFileReader sfr = SquadFileReader();
 	squads = sfr.readSquadList();
@@ -105,8 +106,10 @@ void Commander::computeActions()
 	
 	//Check if there are obstacles we can remove. Needed for some
 	//strange maps.
-	if (Broodwar->getFrameCount() % 150 == 0)
+	if (cFrame - lastRemoveCheckFrame >= 150)
 	{
+		lastRemoveCheckFrame = cFrame;
+
 		checkRemovableObstacles();
 	}
 
@@ -115,6 +118,9 @@ void Commander::computeActions()
 	{
 		squads.at(i)->computeActions();
 	}
+
+	// Priorities may have changed
+	sortSquadList();
 
 	//Attack if we have filled all supply spots
 	if (currentState == DEFEND)
@@ -236,7 +242,8 @@ TilePosition Commander::getClosestEnemyBuilding(TilePosition start)
 	SpottedObject* closestObj = NULL;
 	double bestDist = -1;
 
-	for(set<Unit*>::const_iterator i=Broodwar->enemy()->getUnits().begin();i!=Broodwar->enemy()->getUnits().end();i++)
+	set<Unit*> const& enemyUnits = Broodwar->enemy()->getUnits();
+	for(set<Unit*>::const_iterator i = enemyUnits.begin(); i != enemyUnits.end(); i++)
 	{
 		if ((*i)->getType().isBuilding())
 		{
@@ -683,7 +690,7 @@ bool Commander::needUnit(UnitType type)
 	{
 		if (!squads.at(i)->isFull())
 		{
-			if (squads.at(i)->getPriority() > prevPrio)
+			if (squads.at(i)->getPriority() >= prevPrio)
 			{
 				return false;
 			}
@@ -923,9 +930,9 @@ void Commander::printInfo()
 	for (int i = 0; i < (int)squads.size(); i++)
 	{
 		Squad* sq = squads.at(i);
-		if (sq->isRequired())
+		if ((sq->isRequired() || sq->isOffensive()) &&  (sq->getSize() > 0 || sq->getPriority() < 1000))
 		{
-			Broodwar->drawTextScreen(295,no*16+16, "SQ %d: (%d/%d)", sq->getID(), sq->getSize(), sq->getTotalUnits());
+			Broodwar->drawTextScreen(295,no*16+16, "SQ %d: (%d/%d), prio: %d", sq->getID(), sq->getSize(), sq->getTotalUnits(), sq->getPriority());
 			no++;
 		}
 	}

@@ -49,6 +49,7 @@ private:
 	void assignUnit(BaseAgent* agent);
 
 	int lastCallFrame;
+	int lastRemoveCheckFrame;
 
 protected:
 	vector<Squad*> squads;
