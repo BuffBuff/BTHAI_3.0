@@ -45,6 +45,10 @@ void BuildPlanner::buildingDestroyed(Unit* building)
 	{
 		return;
 	}
+	if (building->getType().isResourceDepot())
+	{
+		return;
+	}
 
 	addBuildingFirst(building->getType());
 }
