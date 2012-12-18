@@ -30,7 +30,7 @@ void QueenAgent::Parasite(Unit* target)
 	if (BioUnitNotParasite(target))
 		{
 			unit->useTech(TechTypes::Parasite, target);
-			Broodwar->sendText("You just got AIDS, muthafudgah!");
+			Broodwar->sendText("You should go see a doctor!");
 			return;
 		}
 }
@@ -38,7 +38,7 @@ void QueenAgent::Parasite(Unit* target)
 void QueenAgent::Broodling(Unit* target)
 {
 	unit->useTech(TechTypes::Spawn_Broodlings, target);
-	Broodwar->sendText("You should have used a condom, but now you got twins!");
+	Broodwar->sendText("Take care of my boys, will you?");
 }
 
 void QueenAgent::computeActions()
@@ -46,13 +46,13 @@ void QueenAgent::computeActions()
 	if(getUnit()->getEnergy() < 150)
 	{
 		//Broodwar->printf("I are funnnny! %d", getUnit()->getEnergy());
-		return;
+		goal = Broodwar->self()->getStartLocation();
 	}
 
 	Unit* target;
 	if(enemyUnitsWithinRange(12) > 0)
 	{
-	Broodwar->printf("I see %d enemy units", enemyUnitsWithinRange(12));
+	//Broodwar->printf("I see %d enemy units", enemyUnitsWithinRange(12));
 			target = getClosestOrganicEnemy(12);
 			if(target == NULL)
 				return;
