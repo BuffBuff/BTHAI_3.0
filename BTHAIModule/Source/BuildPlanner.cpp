@@ -579,6 +579,15 @@ bool BuildPlanner::containsType(UnitType type)
 			return true;
 		}
 	}
+
+	for (int i = 0; i < (int)buildQueue.size(); i++)
+	{
+		if (buildQueue.at(i).toBuild.getID() == type.getID())
+		{
+			return true;
+		}
+	}
+
 	return false;
 }
 
