@@ -243,9 +243,9 @@ Unit* Squad::findTarget()
 				
 						//Check if enemy unit is cloaked
 						if (dist <= maxRange)
-				{
-							if ((*i)->isCloaked())
-				{
+						{
+							if ((*i)->isCloaked() || (*i)->isBurrowed())
+							{
 								Commander::getInstance()->handleCloakedEnemy((*i)->getTilePosition(), this);
 							}
 
@@ -279,9 +279,9 @@ Unit* Squad::findTarget()
 		}*/
 
 	}
-	catch (exception)
+	catch (exception& ex)
 	{
-
+		Broodwar->printf("Exception: %s", ex.what());
 	}
 
 	return NULL;
@@ -526,7 +526,7 @@ bool Squad::isGathered()
 		TilePosition center = getCenter();
 		int tot = 0;
 		int within = 0;
-		int maxRange = 4*32;
+		int maxRange = 4*32 + getSize() * 32 / 10;
 
 		for (int i = 1; i < (int)agents.size(); i++)
 		{

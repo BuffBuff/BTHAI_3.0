@@ -20,6 +20,9 @@ Commander::Commander()
 
 	lastCallFrame = Broodwar->getFrameCount();
 	lastRemoveCheckFrame = lastCallFrame;
+	lastSentOverlordFrame = lastCallFrame;
+
+	lastDetectionTarget = TilePositions::None;
 
 	SquadFileReader sfr = SquadFileReader();
 	squads = sfr.readSquadList();
@@ -326,7 +329,37 @@ void Commander::handleCloakedEnemy(TilePosition pos, Squad* squad)
 	}
 	if (BuildPlanner::isZerg())
 	{
-		
+		int frame = Broodwar->getFrameCount();
+		if (frame - lastSentOverlordFrame > 400 || pos != lastDetectionTarget)
+		{
+			BaseAgent* closest = NULL;
+			int dist = INT_MAX;
+
+			vector<BaseAgent*> agents = AgentManager::getInstance()->getAgents();
+			for (unsigned int i = 0; i < agents.size(); i++)
+			{
+				BaseAgent* agent = agents.at(i);
+				if (agent->isOfType(UnitTypes::Zerg_Overlord))
+				{
+					if (agent->isAlive() && agent->getGoal().x() != -1)
+					{
+						int aDist = (int) agent->getUnit()->getTilePosition().getDistance(pos);
+						if (aDist < dist)
+						{
+							closest = agent;
+							dist = aDist;
+						}
+					}
+				}
+			}
+
+			if (closest)
+			{
+				closest->setGoal(pos);
+				lastSentOverlordFrame = frame;
+				lastDetectionTarget = pos;
+			}
+		}
 	}
 }
 

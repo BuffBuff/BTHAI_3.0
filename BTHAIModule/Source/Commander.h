@@ -50,6 +50,8 @@ private:
 
 	int lastCallFrame;
 	int lastRemoveCheckFrame;
+	int lastSentOverlordFrame;
+	TilePosition lastDetectionTarget;
 
 protected:
 	vector<Squad*> squads;
