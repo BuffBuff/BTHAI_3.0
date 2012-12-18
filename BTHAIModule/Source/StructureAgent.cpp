@@ -173,7 +173,7 @@ void StructureAgent::computeActions()
 			}
 		}
 
-		if (!unit->isBeingConstructed() && unit->isIdle() && getUnit()->getType().canProduce())
+		if (unit->isIdle() && getUnit()->getType().canProduce())
 		{
 			//Iterate through all unit types
 			for(set<UnitType>::iterator i=UnitTypes::allUnitTypes().begin();i!=UnitTypes::allUnitTypes().end();i++)
