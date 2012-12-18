@@ -1,0 +1,14 @@
+Zerg_Spawning_Pool
+Zerg_Extractor:3000
+Zerg_Creep_Colony
+Zerg_Hydralisk_Den
+Zerg_Hatchery
+Zerg_Sunken_Colony
+Zerg_Evolution_Chamber:9000
+
+Zerg_Spire:12000
+Zerg_Creep_Colony:14000
+Zerg_Sunken_Colony:15000
+
+
+Zerg_Queens_Nest:29000
